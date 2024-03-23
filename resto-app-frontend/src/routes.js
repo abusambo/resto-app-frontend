@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Home = React.lazy(() => import('./views/home/Home'))
-const Menu = React.lazy(() => import('./views/menu/Menu'))
+const Menu = React.lazy(() => import('./views/menu/MenuPage'))
 const Order = React.lazy(() => import('./views/order/Order'))
 
 const routes = [

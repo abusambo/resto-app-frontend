@@ -1,16 +1,33 @@
 import axios from 'axios'
-
-const api = axios.create({
+import { objectToQueryString } from '../Util/functions'
+const SKIP = 0
+const TAKE = 20
+export const api = axios.create({
   baseURL: 'http://localhost:5555',
 })
 
-export const login = async (data) => {
-  const response = await api.post(`/auth/login`, data)
+api.interceptors.request.use(
+  async (config) => {
+    // Add query parameter to the request URL
+    const userData = await localStorage.getItem('resto-app-user')
+    const parsedUSerData = JSON.parse(userData)
+    config.params = {
+      ...config.params,
+      orgId: parsedUSerData?.orgId ?? 0,
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
 
-  if (response.status === 201) {
-    await localStorage.setItem('resto-app-token', response.data.access_token)
-    await localStorage.setItem('resto-app-user', JSON.stringify(response.data.user))
-    axios.defaults.headers.common['Authorization'] = `bearer ${data.access_token}`
-  }
-  return response.data
+export default api
+
+export const genericFetch = async (url, queryParamObject = {}) => {
+  const defaultObject = { skip: SKIP, take: TAKE, ...queryParamObject }
+  const queryStringFromObject = objectToQueryString(defaultObject)
+
+  const data = await api.get(`${url}${queryStringFromObject}`)
+  return data
 }

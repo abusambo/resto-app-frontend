@@ -16,7 +16,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import { login } from '../../../services/api'
+import { login } from '../../../services/login'
 
 const Login = () => {
   const navigate = useNavigate()
